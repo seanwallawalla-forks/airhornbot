@@ -27,3 +27,14 @@ Example run command:
 ```
 BOT_TOKEN=foo node bot.js
 ```
+
+# Docker
+
+Here's an example .env file to use with `docker-compose`:
+
+```
+BOT_TOKEN=XXX
+CLIENT_ID=7654321
+CLIENT_SECRET=XXX
+REDIRECT_URI=https://airhornbot.gov/api/oauth_redirect
+```

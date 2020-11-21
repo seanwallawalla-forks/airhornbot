@@ -2,8 +2,9 @@ const express = require('express');
 
 const { publishHorn } = require('../lib/VoiceState');
 
+const PORT = process.env.PORT || 4500;
+
 const app = express();
-const port = process.env.PORT || 4500;
 
 const API_ENDPOINT = process.env.API_ENDPOINT || 'https://discord.com/api/v8';
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -112,6 +113,6 @@ async function handleCommand(member, data, res) {
   }
 }
 
-app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`App listening at http://localhost:${PORT}`);
 });

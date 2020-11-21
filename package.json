@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "format": "prettier --single-quote --trailing-comma all --print-width 100 --write \"**/*.js\""
+    "format": "prettier --write \"**/*.js\"",
+    "web": "node web/server.js",
+    "bot": "node bot/bot.js"
   },
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
