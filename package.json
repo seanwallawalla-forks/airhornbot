@@ -1,0 +1,21 @@
+{
+  "name": "airhornbot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "format": "prettier --single-quote --trailing-comma all --print-width 100 --write \"**/*.js\""
+  },
+  "dependencies": {
+    "@discordjs/opus": "^0.3.3",
+    "axios": "^0.21.0",
+    "discord.js-light": "^3.3.6",
+    "express": "^4.17.1",
+    "ffmpeg-static": "^4.2.7",
+    "ioredis": "^4.19.2",
+    "querystring": "^0.2.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.2.0"
+  }
+}
