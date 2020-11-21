@@ -8,6 +8,8 @@ A node implementation of Airhorn Bot.
 yarn install
 ```
 
+Also requires a local redis instance!
+
 # Web server
 
 Handles Oauth and hosts the interaction endpoint for slash commands.
