@@ -1,4 +1,6 @@
+const axios = require('axios');
 const express = require('express');
+const qs = require('querystring');
 
 const { publishHorn, getHornCount } = require('../lib/VoiceState');
 
@@ -26,9 +28,6 @@ const InteractionType = Object.freeze({
 app.use(express.json());
 
 app.get('/api/oauth_redirect', async (req, res) => {
-  const qs = require('querystring');
-  const axios = require('axios');
-
   const { code, error, error_description } = req.query;
   if (error) {
     res.status(500).send(`${error}: ${error_description}`);
