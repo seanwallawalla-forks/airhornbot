@@ -1,7 +1,7 @@
 const Discord = require('discord.js-light');
 
 const { onUserJoin, onUserLeave, subscribeHorn } = require('../lib/VoiceState');
-const { getPathForSound } = require('../lib/Horns');
+const { getPathForSound } = require('../lib/HornAudio');
 
 const client = new Discord.Client({
   ws: {
@@ -11,15 +11,9 @@ const client = new Discord.Client({
 
 client.on('voiceStateUpdate', async (oldMember, newMember) => {
   if (newMember == null) {
-    return;
-  }
-  const userId = newMember.id;
-  const channelId = newMember.channelID;
-
-  if (channelId == null) {
-    onUserLeave(userId);
+    onUserLeave(oldMember.id);
   } else {
-    onUserJoin(userId, channelId);
+    onUserJoin(newMember.id, newMember.channelID);
   }
 });
 

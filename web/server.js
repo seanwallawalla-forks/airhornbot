@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { publishHorn } = require('../lib/VoiceState');
+const { publishHorn, getHornCount } = require('../lib/VoiceState');
 
 const PORT = process.env.PORT || 4500;
 
@@ -86,18 +86,18 @@ async function handleCommand(member, data, res) {
           }
         });
       }
-      const sentHorn = await publishHorn(member.user.id, soundName);
-      if (sentHorn) {
-        res.send({
-          type: InteractionResponseType.ACK,
-        });
-      } else {
+      const result = await publishHorn(member.user.id, soundName);
+      if (result == null) {
         res.send({
           type: InteractionResponseType.CHANNEL_MESSAGE,
           data: {
             content: "Sorry, I couldn't find you in a voice channel :(",
             flags: 1 << 6,
           },
+        });
+      } else {
+        res.send({
+          type: InteractionResponseType.ACK,
         });
       }
       break;
@@ -112,6 +112,12 @@ async function handleCommand(member, data, res) {
       break;
   }
 }
+
+app.get('/api/hornCount', async (req, res) => {
+  res.send({
+    hornCount: await getHornCount(),
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`App listening at http://localhost:${PORT}`);
