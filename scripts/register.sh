@@ -41,6 +41,12 @@ curl "${API_ENDPOINT}/applications/${CLIENT_ID}/guilds/${GUILD_ID}/commands" \
                   "value": "wow"
               }
             ]
+          },
+          {
+            "name": "stats",
+            "description": "See some numbers",
+            "required": false,
+            "type": 5
           }
         ]
     }'

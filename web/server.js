@@ -100,6 +100,15 @@ async function handleCommand(member, data, res) {
         });
       }
       break;
+    case 'stats':
+      const hornCount = await getHornCount();
+      res.send({
+        type: InteractionResponseType.CHANNEL_MESSAGE,
+        data: {
+          content: `${hornCount.toLocaleString()} horns blown`,
+        },
+      });
+      break;
     default:
       res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE,
