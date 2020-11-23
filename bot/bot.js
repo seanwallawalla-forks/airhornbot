@@ -1,7 +1,7 @@
 const Discord = require('discord.js-light');
 
 const { onUserJoin, onUserLeave, subscribeHorn } = require('../lib/VoiceState');
-const { getPathForSound } = require('../lib/HornAudio');
+const { getStreamForSound } = require('../lib/HornAudio');
 
 const client = new Discord.Client({
   ws: {
@@ -31,12 +31,15 @@ subscribeHorn(async (channelId, soundName) => {
     return;
   }
   const connection = await channel.join();
-  const soundPath = getPathForSound(soundName);
-  if (soundPath == null) {
+  const sound = getStreamForSound(soundName);
+  if (sound == null) {
     console.log('Unknown sound for', soundName);
     channel.leave();
   } else {
-    const dispatcher = connection.play(soundPath);
+    console.log('Streaming', soundName);
+    const dispatcher = connection.play(sound, {
+      type: 'ogg/opus',
+    });
     dispatcher.on('finish', () => {
       channel.leave();
     });
