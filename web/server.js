@@ -1,4 +1,5 @@
 const axios = require('axios');
+const ed = require('noble-ed25519');
 const express = require('express');
 const qs = require('querystring');
 
@@ -11,6 +12,7 @@ const app = express();
 const API_ENDPOINT = process.env.API_ENDPOINT || 'https://discord.com/api/v8';
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const CLIENT_PUBLIC_KEY = process.env.CLIENT_PUBLIC_KEY;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 
 const InteractionResponseType = Object.freeze({
@@ -25,7 +27,18 @@ const InteractionType = Object.freeze({
   COMMAND: 2,
 });
 
-app.use(express.json());
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf;
+    },
+  }),
+);
+
+async function verifyKey(req) {
+  const signature = req.get('x-signature-ed25519');
+  return await ed.verify(signature, req.rawBody, CLIENT_PUBLIC_KEY);
+}
 
 app.get('/api/oauth_redirect', async (req, res) => {
   const { code, error, error_description } = req.query;
@@ -63,7 +76,12 @@ app.get('/api/oauth_redirect', async (req, res) => {
   }
 });
 
-app.post('/api/interactions', (req, res) => {
+app.post('/api/interactions', async (req, res) => {
+  if (!(await verifyKey(req))) {
+    res.status(403).end();
+    return;
+  }
+
   const message = req.body;
   if (message && message.type === InteractionType.COMMAND) {
     handleCommand(message.member, message.data, res);
