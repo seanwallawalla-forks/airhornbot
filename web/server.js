@@ -93,8 +93,10 @@ app.post('/api/interactions', async (req, res) => {
 });
 
 async function handleCommand(member, data, res) {
-  switch (data.name) {
-    case 'airhorn':
+  // There should only ever be one subcommand.
+  const subcommand = data.options[0];
+  switch (subcommand.name) {
+    case 'noise':
       let soundName = 'classic';
       if (data.options) {
         data.options.forEach((option) => {
@@ -123,7 +125,7 @@ async function handleCommand(member, data, res) {
       res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE,
         data: {
-          content: `${hornCount.toLocaleString()} horns blown`,
+          content: `${hornCount.toLocaleString()} airhorns have been used.`,
         },
       });
       break;
@@ -132,8 +134,8 @@ async function handleCommand(member, data, res) {
         type: InteractionResponseType.CHANNEL_MESSAGE,
         data: {
           content: "Sorry, I don't understand this command :(",
+          flags: 1 << 6,
         },
-        flags: 1 << 6,
       });
       break;
   }

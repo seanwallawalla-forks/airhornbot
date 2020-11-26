@@ -8,45 +8,52 @@ curl "${API_ENDPOINT}/applications/${CLIENT_ID}/guilds/${GUILD_ID}/commands" \
   -H "Authorization: Bot ${BOT_TOKEN}" \
   -d '{
         "name": "airhorn",
-        "description": "Blow an airhorn in your current voice channel",
+        "description": "Useful airhorn utilities",
         "options": [
           {
-            "name": "sound",
-            "description": "Spice it up",
-            "required": false,
-            "type": 3,
-            "choices": [
+            "name": "noise",
+            "description": "Blow an airhorn in your current voice channel",
+            "type": 1,
+            "options": [
               {
-                  "name": "classic",
-                  "value": "classic"
-              },
-              {
-                  "name": "more horn",
-                  "value": "more horn"
-              },
-              {
-                  "name": "vuvuzela",
-                  "value": "vuvuzela"
-              },
-              {
-                  "name": "didgeridoo",
-                  "value": "didgeridoo"
-              },
-              {
-                  "name": "aoe",
-                  "value": "aoe"
-              },
-              {
-                  "name": "wow",
-                  "value": "wow"
+                "name": "sound",
+                "description": "Spice it up",
+                "required": false,
+                "type": 3,
+                "choices": [
+                  {
+                      "name": "classic",
+                      "value": "classic"
+                  },
+                  {
+                      "name": "more horn",
+                      "value": "more horn"
+                  },
+                  {
+                      "name": "vuvuzela",
+                      "value": "vuvuzela"
+                  },
+                  {
+                      "name": "didgeridoo",
+                      "value": "didgeridoo"
+                  },
+                  {
+                      "name": "aoe",
+                      "value": "aoe"
+                  },
+                  {
+                      "name": "wow",
+                      "value": "wow"
+                  }
+                ]
               }
             ]
           },
           {
             "name": "stats",
             "description": "See some numbers",
-            "required": false,
-            "type": 5
+            "type": 1,
+            "options": []
           }
         ]
     }'
