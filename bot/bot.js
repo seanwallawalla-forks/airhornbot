@@ -30,6 +30,7 @@ subscribeHorn(async (channelId, soundName) => {
     console.log('Null channel for', channelId);
     return;
   }
+
   const connection = await channel.join();
   const sound = getStreamForSound(soundName);
   if (sound == null) {

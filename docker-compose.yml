@@ -8,6 +8,7 @@ services:
       - REDIS_HOST=redis
     command:
       bot
+    restart: always
 
   web:
     build: ./
@@ -15,12 +16,14 @@ services:
       - NODE_ENV=production
       - CLIENT_ID=${CLIENT_ID}
       - CLIENT_SECRET=${CLIENT_SECRET}
+      - CLIENT_PUBLIC_KEY=${CLIENT_PUBLIC_KEY}
       - REDIRECT_URI=${REDIRECT_URI}
       - REDIS_HOST=redis
     ports:
       - 80:4500
     command:
       web
+    restart: always
 
   redis:
     image: redis:alpine
@@ -28,6 +31,8 @@ services:
       - 6379
     volumes:
       - redisdata:/data
+    restart: always
+
 volumes:
   redisdata:
     driver: "local"
