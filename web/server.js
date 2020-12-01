@@ -36,8 +36,13 @@ app.use(
 );
 
 async function verifyKey(req) {
-  const signature = req.get('x-signature-ed25519');
-  return await ed.verify(signature, req.rawBody, CLIENT_PUBLIC_KEY);
+  const timestamp = req.get('X-Signature-Timestamp');
+  const signature = req.get('X-Signature-Ed25519');
+  return await ed.verify(
+    signature,
+    Buffer.concat([Buffer.from(`${timestamp}`, 'utf-8'), req.rawBody]),
+    CLIENT_PUBLIC_KEY,
+  );
 }
 
 app.get('/api/oauth_redirect', async (req, res) => {
@@ -78,7 +83,7 @@ app.get('/api/oauth_redirect', async (req, res) => {
 
 app.post('/api/interactions', async (req, res) => {
   if (!(await verifyKey(req))) {
-    res.status(403).end();
+    res.status(403).end('Invalid signature');
     return;
   }
 
