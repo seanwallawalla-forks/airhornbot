@@ -40,7 +40,7 @@ async function verifyKey(req) {
   const signature = req.get('X-Signature-Ed25519');
   return await ed.verify(
     signature,
-    Buffer.concat([Buffer.from(`${timestamp}`, 'utf-8'), req.rawBody]),
+    Buffer.concat([Buffer.from(timestamp, 'utf-8'), req.rawBody]),
     CLIENT_PUBLIC_KEY,
   );
 }
