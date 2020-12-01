@@ -8,47 +8,52 @@ curl "${API_ENDPOINT}/applications/${CLIENT_ID}/guilds/${GUILD_ID}/commands" \
   -H "Authorization: Bot ${BOT_TOKEN}" \
   -d '{
         "name": "airhorn",
-        "description": "Useful airhorn utilities",
+        "description": "Blow an airhorn in your current voice channel",
+        "type": 1,
         "options": [
           {
-            "name": "noise",
-            "description": "Blow an airhorn in your current voice channel",
-            "type": 1,
-            "options": [
+            "name": "sound",
+            "description": "Spice it up",
+            "required": false,
+            "type": 3,
+            "choices": [
               {
-                "name": "sound",
-                "description": "Spice it up",
-                "required": false,
-                "type": 3,
-                "choices": [
-                  {
-                      "name": "classic",
-                      "value": "classic"
-                  },
-                  {
-                      "name": "more horn",
-                      "value": "more horn"
-                  },
-                  {
-                      "name": "vuvuzela",
-                      "value": "vuvuzela"
-                  },
-                  {
-                      "name": "didgeridoo",
-                      "value": "didgeridoo"
-                  },
-                  {
-                      "name": "aoe",
-                      "value": "aoe"
-                  },
-                  {
-                      "name": "wow",
-                      "value": "wow"
-                  }
-                ]
+                  "name": "classic",
+                  "value": "classic"
+              },
+              {
+                  "name": "more horn",
+                  "value": "more horn"
+              },
+              {
+                  "name": "vuvuzela",
+                  "value": "vuvuzela"
+              },
+              {
+                  "name": "didgeridoo",
+                  "value": "didgeridoo"
+              },
+              {
+                  "name": "aoe",
+                  "value": "aoe"
+              },
+              {
+                  "name": "wow",
+                  "value": "wow"
               }
             ]
-          },
+          }
+        ]
+    }'
+
+curl "${API_ENDPOINT}/applications/${CLIENT_ID}/guilds/${GUILD_ID}/commands" \
+  -H 'Content-Type: application/json' \
+  -H "Authorization: Bot ${BOT_TOKEN}" \
+  -d '{
+        "name": "airhornmeta",
+        "description": "Useful airhorn-related commands",
+        "type": 1,
+        "options": [
           {
             "name": "stats",
             "description": "See some numbers",
@@ -57,3 +62,4 @@ curl "${API_ENDPOINT}/applications/${CLIENT_ID}/guilds/${GUILD_ID}/commands" \
           }
         ]
     }'
+

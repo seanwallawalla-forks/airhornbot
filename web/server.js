@@ -98,41 +98,18 @@ app.post('/api/interactions', async (req, res) => {
 });
 
 async function handleCommand(member, data, res) {
-  // There should only ever be one subcommand.
-  const subcommand = data.options[0];
-  switch (subcommand.name) {
-    case 'noise':
-      let soundName = 'classic';
-      if (data.options) {
-        data.options.forEach((option) => {
-          if (option.name === 'sound') {
-            soundName = option.value;
-          }
-        });
-      }
-      const result = await publishHorn(member.user.id, soundName);
-      if (result == null) {
-        res.send({
-          type: InteractionResponseType.CHANNEL_MESSAGE,
-          data: {
-            content: "Sorry, I couldn't find you in a voice channel :(",
-            flags: 1 << 6,
-          },
-        });
-      } else {
-        res.send({
-          type: InteractionResponseType.ACK,
-        });
-      }
+  switch (data.name) {
+    case 'airhorn':
+      handleSound(member, data, res);
       break;
-    case 'stats':
-      const hornCount = await getHornCount();
-      res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE,
-        data: {
-          content: `${hornCount.toLocaleString()} airhorns have been used.`,
-        },
-      });
+    case 'airhornmeta':
+      // There should only ever be one subcommand.
+      const subcommand = data.options[0];
+      switch (subcommand.name) {
+        case 'stats':
+          handleStats(res);
+          break;
+      }
       break;
     default:
       res.send({
@@ -144,6 +121,41 @@ async function handleCommand(member, data, res) {
       });
       break;
   }
+}
+
+async function handleSound(member, data, res) {
+  let soundName = 'classic';
+  if (data.options) {
+    data.options.forEach((option) => {
+      if (option.name === 'sound') {
+        soundName = option.value;
+      }
+    });
+  }
+  const result = await publishHorn(member.user.id, soundName);
+  if (result == null) {
+    res.send({
+      type: InteractionResponseType.CHANNEL_MESSAGE,
+      data: {
+        content: "Sorry, I couldn't find you in a voice channel :(",
+        flags: 1 << 6,
+      },
+    });
+  } else {
+    res.send({
+      type: InteractionResponseType.ACK,
+    });
+  }
+}
+
+async function handleStats(res) {
+  const hornCount = await getHornCount();
+  res.send({
+    type: InteractionResponseType.CHANNEL_MESSAGE,
+    data: {
+      content: `${hornCount.toLocaleString()} airhorns have been used.`,
+    },
+  });
 }
 
 app.get('/api/hornCount', async (req, res) => {
