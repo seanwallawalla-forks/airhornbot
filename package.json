@@ -6,7 +6,8 @@
   "scripts": {
     "format": "prettier --write \"**/*.js\"",
     "web": "node web/server.js",
-    "bot": "node bot/bot.js"
+    "bot": "node bot/bot.js",
+    "bot-sharded": "node bot/shard_entrypoint.js"
   },
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
