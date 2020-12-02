@@ -17,9 +17,10 @@ const REDIRECT_URI = process.env.REDIRECT_URI;
 
 const InteractionResponseType = Object.freeze({
   PONG: 1,
-  ACK: 2,
+  ACKNOWLEDGE: 2,
   CHANNEL_MESSAGE: 3,
   CHANNEL_MESSAGE_WITH_SOURCE: 4,
+  ACKNOWLEDGE_WITH_SOURCE: 5,
 });
 
 const InteractionType = Object.freeze({
@@ -143,7 +144,7 @@ async function handleSound(member, data, res) {
     });
   } else {
     res.send({
-      type: InteractionResponseType.ACK,
+      type: InteractionResponseType.ACKNOWLEDGE_WITH_SOURCE,
     });
   }
 }
