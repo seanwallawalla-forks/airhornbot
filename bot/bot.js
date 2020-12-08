@@ -31,18 +31,24 @@ subscribeHorn(async (channelId, soundName) => {
     return;
   }
 
-  const connection = await channel.join();
-  const sound = getStreamForSound(soundName);
-  if (sound == null) {
-    console.log('Unknown sound for', soundName);
-    channel.leave();
-  } else {
-    console.log('Streaming', soundName);
-    const dispatcher = connection.play(sound, {
-      type: 'ogg/opus',
-    });
-    dispatcher.on('finish', () => {
+  try {
+    const connection = await channel.join();
+    const sound = getStreamForSound(soundName);
+    if (sound == null) {
+      console.log('Unknown sound for', soundName);
       channel.leave();
-    });
+    } else {
+      console.log('Streaming', soundName);
+      const dispatcher = connection.play(sound, {
+        type: 'ogg/opus',
+      });
+      dispatcher.on('finish', () => {
+        channel.leave();
+      });
+    }
+  } catch (ex) {
+    console.error(ex);
+  } finally {
+    channel.leave();
   }
 });
