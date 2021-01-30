@@ -110,6 +110,9 @@ async function handleCommand(member, data, res) {
         case 'stats':
           handleStats(res);
           break;
+        case 'invite':
+          handleInvite(res);
+          break;
       }
       break;
     default:
@@ -155,6 +158,18 @@ async function handleStats(res) {
     type: InteractionResponseType.CHANNEL_MESSAGE,
     data: {
       content: `${hornCount.toLocaleString()} airhorns have been used.`,
+      flags: 1 << 6,
+    },
+  });
+}
+
+async function handleInvite(res) {
+  res.send({
+    type: InteractionResponseType.CHANNEL_MESSAGE,
+    data: {
+      content:
+        'Add me: https://discord.com/api/oauth2/authorize?client_id=159799960412356608&permissions=3145728&scope=bot%20applications.commands',
+      flags: 1 << 6,
     },
   });
 }
