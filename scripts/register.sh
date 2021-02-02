@@ -48,6 +48,14 @@ curl "${API_ENDPOINT}/applications/${CLIENT_ID}/guilds/${GUILD_ID}/commands" \
               {
                   "name": "robot man",
                   "value": "robot man"
+              },
+              {
+                  "name": "ostrich",
+                  "value": "ostrich"
+              },
+              {
+                  "name": "gavel",
+                  "value": "gavel"
               }
             ]
           }
