@@ -41,6 +41,7 @@ subscribeHorn(async (channelId, soundName) => {
       console.log('Streaming', soundName);
       const dispatcher = connection.play(sound, {
         type: 'ogg/opus',
+        volume: false,
       });
       dispatcher.on('finish', () => {
         channel.leave();
@@ -48,7 +49,6 @@ subscribeHorn(async (channelId, soundName) => {
     }
   } catch (ex) {
     console.error(ex);
-  } finally {
     channel.leave();
   }
 });
