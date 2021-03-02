@@ -75,6 +75,12 @@ curl "${API_ENDPOINT}/applications/${CLIENT_ID}/guilds/${GUILD_ID}/commands" \
             "description": "See some numbers",
             "type": 1,
             "options": []
+          },
+          {
+            "name": "invite",
+            "description": "Instructions for inviting the bot",
+            "type": 1,
+            "options": []
           }
         ]
     }'

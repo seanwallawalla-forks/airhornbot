@@ -90,7 +90,8 @@ app.post('/api/interactions', async (req, res) => {
 
   const message = req.body;
   if (message && message.type === InteractionType.COMMAND) {
-    handleCommand(message.member, message.data, res);
+    const isDM = !message.member;
+    handleCommand(message.user || message.member.user, message.data, isDM, res);
   } else {
     res.send({
       type: InteractionResponseType.PONG,
@@ -98,10 +99,19 @@ app.post('/api/interactions', async (req, res) => {
   }
 });
 
-async function handleCommand(member, data, res) {
+async function handleCommand(user, data, isDM, res) {
   switch (data.name) {
     case 'airhorn':
-      handleSound(member, data, res);
+      if (isDM) {
+        res.send({
+          type: InteractionResponseType.CHANNEL_MESSAGE,
+          data: {
+            content: "You can't trigger airhorns from DM.",
+          },
+        });
+      } else {
+        handleSound(user, data, res);
+      }
       break;
     case 'airhornmeta':
       // There should only ever be one subcommand.
@@ -127,7 +137,7 @@ async function handleCommand(member, data, res) {
   }
 }
 
-async function handleSound(member, data, res) {
+async function handleSound(user, data, res) {
   let soundName = 'classic';
   if (data.options) {
     data.options.forEach((option) => {
@@ -136,7 +146,7 @@ async function handleSound(member, data, res) {
       }
     });
   }
-  const result = await publishHorn(member.user.id, soundName);
+  const result = await publishHorn(user.id, soundName);
   if (result == null) {
     res.send({
       type: InteractionResponseType.CHANNEL_MESSAGE,
@@ -168,7 +178,7 @@ async function handleInvite(res) {
     type: InteractionResponseType.CHANNEL_MESSAGE,
     data: {
       content:
-        'Add me: https://discord.com/api/oauth2/authorize?client_id=159799960412356608&permissions=3145728&scope=bot%20applications.commands',
+        'Add me: https://discord.com/api/oauth2/authorize?client_id=159799960412356608&permissions=3146752&scope=applications.commands%20bot',
       flags: 1 << 6,
     },
   });
