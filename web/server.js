@@ -17,10 +17,8 @@ const REDIRECT_URI = process.env.REDIRECT_URI;
 
 const InteractionResponseType = Object.freeze({
   PONG: 1,
-  ACKNOWLEDGE: 2,
-  CHANNEL_MESSAGE: 3,
   CHANNEL_MESSAGE_WITH_SOURCE: 4,
-  ACKNOWLEDGE_WITH_SOURCE: 5,
+  DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE: 5,
 });
 
 const InteractionType = Object.freeze({
@@ -104,7 +102,7 @@ async function handleCommand(user, data, isDM, res) {
     case 'airhorn':
       if (isDM) {
         res.send({
-          type: InteractionResponseType.CHANNEL_MESSAGE,
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             content: "You can't trigger airhorns from DM.",
           },
@@ -127,7 +125,7 @@ async function handleCommand(user, data, isDM, res) {
       break;
     default:
       res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE,
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
           content: "Sorry, I don't understand this command :(",
           flags: 1 << 6,
@@ -149,7 +147,7 @@ async function handleSound(user, data, res) {
   const result = await publishHorn(user.id, soundName);
   if (result == null) {
     res.send({
-      type: InteractionResponseType.CHANNEL_MESSAGE,
+      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
       data: {
         content: "Sorry, I couldn't find you in a voice channel :(",
         flags: 1 << 6,
@@ -157,7 +155,11 @@ async function handleSound(user, data, res) {
     });
   } else {
     res.send({
-      type: InteractionResponseType.ACKNOWLEDGE_WITH_SOURCE,
+      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+      data: {
+        content: 'Sending sound.',
+        flags: 1 << 6,
+      },
     });
   }
 }
@@ -165,7 +167,7 @@ async function handleSound(user, data, res) {
 async function handleStats(res) {
   const hornCount = await getHornCount();
   res.send({
-    type: InteractionResponseType.CHANNEL_MESSAGE,
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       content: `${hornCount.toLocaleString()} airhorns have been used.`,
       flags: 1 << 6,
@@ -175,7 +177,7 @@ async function handleStats(res) {
 
 async function handleInvite(res) {
   res.send({
-    type: InteractionResponseType.CHANNEL_MESSAGE,
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       content:
         'Add me: https://discord.com/api/oauth2/authorize?client_id=159799960412356608&permissions=3146752&scope=applications.commands%20bot',
