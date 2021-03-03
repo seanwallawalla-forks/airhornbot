@@ -12,11 +12,11 @@ Also requires a local redis instance!
 
 # Web server
 
-Handles Oauth and hosts the interaction endpoint for slash commands.
+Hosts the interaction endpoint for slash commands.
 
 Example run command:
 ```
-CLIENT_ID=7787106001233451 CLIENT_SECRET='abc_123-456' REDIRECT_URI='https://airhornbot.gov/api/oauth_redirect' node server.js
+CLIENT_ID=7787106001233451 CLIENT_SECRET='abc_123-456' node server.js
 ```
 
 # Bot server
@@ -37,5 +37,4 @@ BOT_TOKEN=XXX
 CLIENT_ID=7654321
 CLIENT_SECRET=XXX
 CLIENT_PUBLIC_KEY=XXX
-REDIRECT_URI=https://airhornbot.gov/api/oauth_redirect
 ```
