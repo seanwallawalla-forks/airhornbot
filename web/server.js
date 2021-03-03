@@ -9,9 +9,7 @@ const app = express();
 
 const API_ENDPOINT = process.env.API_ENDPOINT || 'https://discord.com/api/v8';
 const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const CLIENT_PUBLIC_KEY = process.env.CLIENT_PUBLIC_KEY;
-const REDIRECT_URI = process.env.REDIRECT_URI;
 
 const InteractionResponseType = Object.freeze({
   PONG: 1,
@@ -21,7 +19,7 @@ const InteractionResponseType = Object.freeze({
 
 const InteractionType = Object.freeze({
   PING: 1,
-  COMMAND: 2,
+  APPLICATION_COMMAND: 2,
 });
 
 app.use(
@@ -31,12 +29,6 @@ app.use(
     },
   }),
 );
-
-app.use((err, req, res, next) => {
-  // Log errors
-  console.error(err.stack)
-  next(err)
-});
 
 async function verifyKey(req) {
   const timestamp = req.get('X-Signature-Timestamp');
@@ -55,7 +47,7 @@ app.post('/api/interactions', async (req, res) => {
   }
 
   const message = req.body;
-  if (message && message.type === InteractionType.COMMAND) {
+  if (message && message.type === InteractionType.APPLICATION_COMMAND) {
     const isDM = !message.member;
     handleCommand(message.user || message.member.user, message.data, isDM, res);
   } else {

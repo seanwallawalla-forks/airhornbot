@@ -1,6 +1,6 @@
 const path = require('path');
 
-const { ShardingManager } = require('discord.js');
+const { ShardingManager } = require('discord.js-light');
 
 const botPath = path.join(__dirname, './bot.js');
 const manager = new ShardingManager(botPath, {
