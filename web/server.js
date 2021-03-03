@@ -1,7 +1,5 @@
-const axios = require('axios');
 const ed = require('noble-ed25519');
 const express = require('express');
-const qs = require('querystring');
 
 const { publishHorn, getHornCount } = require('../lib/VoiceState');
 
@@ -34,6 +32,12 @@ app.use(
   }),
 );
 
+app.use((err, req, res, next) {
+  // Log errors
+  console.error(err.stack)
+  next(err)
+});
+
 async function verifyKey(req) {
   const timestamp = req.get('X-Signature-Timestamp');
   const signature = req.get('X-Signature-Ed25519');
@@ -43,42 +47,6 @@ async function verifyKey(req) {
     CLIENT_PUBLIC_KEY,
   );
 }
-
-app.get('/api/oauth_redirect', async (req, res) => {
-  const { code, error, error_description } = req.query;
-  if (error) {
-    res.status(500).send(`${error}: ${error_description}`);
-    return;
-  }
-
-  const body = {
-    client_id: CLIENT_ID,
-    client_secret: CLIENT_SECRET,
-    grant_type: 'authorization_code',
-    code: code,
-    redirect_uri: REDIRECT_URI,
-    scope: 'bot applications.commands',
-  };
-
-  try {
-    const url = `${API_ENDPOINT}/oauth2/token`;
-    const resp = await axios.post(url, qs.stringify(body), {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
-    res.send(resp.data);
-  } catch (err) {
-    console.error(`Oauth2 token exchange error: ${err}`);
-    if (err.response) {
-      console.error(`Error response data: ${err.response.status}`);
-      console.error(`Error response data: ${JSON.stringify(err.response.headers, undefined, 2)}`);
-      console.error(`Error response data: ${JSON.stringify(err.response.data, undefined, 2)}`);
-    }
-    res.status(500).send(`Error: ${err}`);
-    return;
-  }
-});
 
 app.post('/api/interactions', async (req, res) => {
   if (!(await verifyKey(req))) {
