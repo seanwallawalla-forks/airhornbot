@@ -32,7 +32,7 @@ app.use(
   }),
 );
 
-app.use((err, req, res, next) {
+app.use((err, req, res, next) => {
   // Log errors
   console.error(err.stack)
   next(err)
