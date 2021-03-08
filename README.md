@@ -1,40 +1,51 @@
-# airhornbot-node
+# airhornbot
 
-A node implementation of Airhorn Bot.
+A Node.js implementation of Airhorn Bot.
 
 # Setup
 
+Prerequisites:
+- Redis Server
+- Yarn
+
+## Website
+
+Build the website for usage.
+
+Example commands:
 ```
+cd website
 yarn install
+yarn run build
 ```
 
-Also requires a local redis instance!
+## Bot
 
-# Web server
+Build the bot and webserver process.
 
-Hosts the interaction endpoint for slash commands.
+Make sure to update/create `config.json`!
 
-Example run command:
+Example commands:
 ```
-CLIENT_ID=7787106001233451 CLIENT_SECRET='abc_123-456' node server.js
-```
-
-# Bot server
-
-Handles gateway events and records voice presence.
-
-Example run command:
-```
-BOT_TOKEN=foo node bot.js
+cd bot
+yarn install
+yarn run build
 ```
 
-# Docker
-
-Here's an example .env file to use with `docker-compose`:
-
+To register the slash commands:
 ```
-BOT_TOKEN=XXX
-CLIENT_ID=7654321
-CLIENT_SECRET=XXX
-CLIENT_PUBLIC_KEY=XXX
+cd bot
+yarn run register-commands
+```
+
+To run the bot:
+```
+cd bot
+yarn run bot
+```
+
+To run the web server:
+```
+cd bot
+yarn run web
 ```

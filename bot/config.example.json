@@ -1,0 +1,117 @@
+{
+  "discord": {
+    "applicationId": "Discord application id (client id)",
+    "token": "Discord bot token"
+  },
+  "web": {
+    "port": 8082,
+    "hostStatic": true,
+    "staticDirectory": "../website/dist"
+  },
+  "redis": {
+    "host": "127.0.0.1",
+    "port": 6379,
+    "password": "password",
+    "prefix": "airhorn"
+  },
+  "sounds": {
+    "classic": {
+      "name": "Classic",
+      "paths": [
+        "airhorn_default.ogg"
+      ]
+    },
+    "more-horn": {
+      "name": "More Horn",
+      "paths": [
+        "airhorn_clownshort.ogg",
+        "airhorn_clownspam.ogg",
+        "airhorn_distant.ogg",
+        "airhorn_echo.ogg",
+        "airhorn_fourtap.ogg",
+        "airhorn_highfartlong.ogg",
+        "airhorn_highfartshort.ogg",
+        "airhorn_midshort.ogg",
+        "airhorn_reverb.ogg",
+        "airhorn_spam.ogg",
+        "airhorn_tripletap.ogg",
+        "airhorn_truck.ogg"
+      ]
+    },
+    "aoe": {
+      "name": "AOE",
+      "paths": [
+        "aoe.ogg"
+      ]
+    },
+    "wow": {
+      "name": "Wow",
+      "paths": [
+        "owen_wilson.opus"
+      ]
+    },
+    "vuvuzela": {
+      "name": "Vuvuzela",
+      "paths": [
+        "vuvuzela.ogg"
+      ]
+    },
+    "didgeridoo": {
+      "name": "Didgeridoo",
+      "paths": [
+        "didgeridoo.ogg"
+      ]
+    },
+    "human-man": {
+      "name": "Human Man",
+      "paths": [
+        "human_man.ogg"
+      ]
+    },
+    "robot-man": {
+      "name": "Robot Man",
+      "paths": [
+        "robot_man.ogg"
+      ]
+    },
+    "stan": {
+      "name": "Stan",
+      "paths": [
+        "cow_herd.ogg",
+        "cow_moo.ogg",
+        "cow_x3.ogg"
+      ]
+    },
+    "jc": {
+      "name": "John Cena",
+      "paths": [
+        "jc_airhorn.ogg",
+        "jc_echo.ogg",
+        "jc_full.ogg",
+        "jc_jc.ogg",
+        "jc_nameis.ogg",
+        "jc_spam.ogg"
+      ]
+    },
+    "anotha": {
+      "name": "Anotha",
+      "paths": [
+        "another_one.ogg",
+        "another_one_classic.ogg",
+        "another_one_echo.ogg"
+      ]
+    },
+    "ostrich": {
+      "name": "Ostrich",
+      "paths": [
+        "ostrich.opus"
+      ]
+    },
+    "gavel": {
+      "name": "Gavel",
+      "paths": [
+        "gavel.opus"
+      ]
+    }
+  }
+}
