@@ -24,7 +24,9 @@ export class AirhornBot {
           type: "PLAYING",
           name: "airhorn.solutions"
         }
-      }
+      },
+      cacheOverwrites: true,
+      cacheRoles: true
     });
     this.commands = new Map<string, DiscordCommand>();
     // Register the listeners

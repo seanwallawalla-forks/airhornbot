@@ -4,6 +4,7 @@ interface Configuration {
 
   discord: {
     applicationId: string;
+    botId: string;
     token: string;
   };
 

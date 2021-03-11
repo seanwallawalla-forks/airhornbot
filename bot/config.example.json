@@ -1,6 +1,7 @@
 {
   "discord": {
     "applicationId": "Discord application id (client id)",
+    "botId": "Discord bot id (user id)",
     "token": "Discord bot token"
   },
   "web": {
