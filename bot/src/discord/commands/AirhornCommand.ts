@@ -1,8 +1,8 @@
 import {Interaction, DiscordCommand, InteractionCommandOption, DiscordCommandResponder} from "../DiscordCommand";
 import {trackPlay} from "../../utils/StatsTracker";
 import {Client} from "discord.js-light";
-import {getStreamForSound, playSound} from "../../utils/AirhornAudio";
 import {config} from "../../utils/Configuration";
+import {enqueueSound, getFileNameForSound} from "../../utils/AirhornAudio";
 
 export class AirhornCommand extends DiscordCommand {
 
@@ -57,7 +57,7 @@ export class AirhornCommand extends DiscordCommand {
     if (!botGuildMember.permissionsIn(fetchedVoiceChannel).has("CONNECT")) {
       return discordCommandResponder.sendBackMessage("The bot could not connect to the voice channel.", false);
     }
-    const sound = getStreamForSound(soundName);
+    const sound = getFileNameForSound(soundName);
     if (!sound) {
       return discordCommandResponder.sendBackMessage("The sound specified was not found.", false);
     }
@@ -65,6 +65,6 @@ export class AirhornCommand extends DiscordCommand {
     discordCommandResponder.sendBackMessage("Dispatching sound...", true);
     trackPlay(guild.id, voiceChannel.id, guildMember.id, soundName);
     // Dispatch the sound
-    await playSound(voiceChannel, sound);
+    enqueueSound(voiceChannel, sound);
   }
 }

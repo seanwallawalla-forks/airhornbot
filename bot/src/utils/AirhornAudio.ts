@@ -8,6 +8,13 @@ const audioBuffers: {
   [key: string]: Buffer
 } = {};
 
+type GuildQueueItem = {
+  voiceChannel: VoiceChannel,
+  soundFileName: string
+};
+
+const guildQueues = new Map<string, GuildQueueItem[]>();
+
 const soundsKeys = Object.keys(config.sounds);
 for (const index in soundsKeys) {
   const key = soundsKeys[index];
@@ -17,7 +24,11 @@ for (const index in soundsKeys) {
   }
 }
 
-export function getStreamForSound(soundName: string): Readable | undefined {
+function getGuildQueue(guildId: string): GuildQueueItem[] {
+  return guildQueues.get(guildId) || [];
+}
+
+export function getFileNameForSound(soundName: string): string | undefined {
   let fileNames;
   // Return a random sound for no sound name or "random" sound name
   if (soundName == null || soundName == "random") {
@@ -28,22 +39,62 @@ export function getStreamForSound(soundName: string): Readable | undefined {
   if (fileNames == null || fileNames.length === 0) {
     return undefined;
   }
-  const randomFileName = fileNames[Math.floor(Math.random() * fileNames.length)];
-  return Readable.from(audioBuffers[randomFileName]);
+  return fileNames[Math.floor(Math.random() * fileNames.length)];
 }
 
-export async function playSound(voiceChannel: VoiceChannel, sound: Readable): Promise<void> {
+export async function enqueueSound(voiceChannel: VoiceChannel, soundFileName: string): Promise<void> {
+  // Make sure the server queue exists
+  if (!guildQueues.has(voiceChannel.guild.id)) {
+    guildQueues.set(voiceChannel.guild.id, []);
+  }
+  const guildQueue = getGuildQueue(voiceChannel.guild.id);
+  // Add the sound to the queue if the queue is less than the max
+  if (guildQueue.length < config.settings.maxQueueSize) {
+    guildQueue.push({
+      voiceChannel,
+      soundFileName
+    });
+  }
+  if (guildQueue.length === 1) {
+    playSound(voiceChannel.guild.id);
+  }
+}
+
+async function playSound(guildId: string): Promise<void> {
+  let voiceChannel: VoiceChannel | undefined;
   try {
-    const connection = await voiceChannel.join();
-    const dispatcher = connection.play(sound, {
-      type: "ogg/opus",
-      volume: false
-    });
-    dispatcher.on("finish", () => {
+    // Loop through the queue
+    let connection;
+    const guildQueue = getGuildQueue(guildId);
+    while (guildQueue.length > 0) {
+      const itemFromQueue = guildQueue[0];
+      if (!connection || connection.channel.id !== itemFromQueue.voiceChannel.id) {
+        voiceChannel = itemFromQueue.voiceChannel;
+        connection = await voiceChannel.join();
+      }
+      // Play the sound from the queue
+      const dispatcher = connection.play(Readable.from(audioBuffers[itemFromQueue.soundFileName]), {
+        type: "ogg/opus",
+        volume: false
+      });
+      // Wait until the sound finishes
+      await new Promise<void>(resolve => {
+        dispatcher.on("finish", () => {
+          resolve();
+        });
+      });
+      guildQueue.shift();
+    }
+    // Remove the queue since we are done and leave the voice channel
+    guildQueues.delete(guildId);
+    if (voiceChannel) {
       voiceChannel.leave();
-    });
+    }
   } catch (e) {
     console.error(e);
-    voiceChannel.leave();
+    guildQueues.delete(guildId);
+    if (voiceChannel) {
+      voiceChannel.leave();
+    }
   }
 }

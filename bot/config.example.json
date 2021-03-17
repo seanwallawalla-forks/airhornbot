@@ -15,6 +15,9 @@
     "password": "password",
     "prefix": "airhorn"
   },
+  "settings": {
+    "maxQueueSize": 5
+  },
   "sounds": {
     "classic": {
       "name": "Classic",

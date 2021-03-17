@@ -21,6 +21,10 @@ interface Configuration {
     prefix: string;
   };
 
+  settings: {
+    maxQueueSize: number;
+  }
+
   sounds: {
     [key: string]: {
       name: string;
