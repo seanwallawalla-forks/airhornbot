@@ -30,7 +30,7 @@ setInterval(async () => {
   });
 }, 1000);
 
-export function apiEventsRouteHandler(req: Request, res: Response) {
+export function apiEventsRouteHandler(req: Request, res: Response): void {
   // Set and flush headers for event stream
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Content-Type", "text/event-stream");

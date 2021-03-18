@@ -1,7 +1,7 @@
 import {readFileSync} from "fs";
 import path from "path";
 import {Readable} from "stream";
-import {VoiceChannel} from "discord.js";
+import {VoiceChannel, VoiceConnection} from "discord.js";
 import {config} from "./Configuration";
 
 const audioBuffers: {
@@ -64,7 +64,7 @@ async function playSound(guildId: string): Promise<void> {
   let voiceChannel: VoiceChannel | undefined;
   try {
     // Loop through the queue
-    let connection;
+    let connection: VoiceConnection | undefined;
     const guildQueue = getGuildQueue(guildId);
     while (guildQueue.length > 0) {
       const itemFromQueue = guildQueue[0];
@@ -79,9 +79,41 @@ async function playSound(guildId: string): Promise<void> {
       });
       // Wait until the sound finishes
       await new Promise<void>(resolve => {
+        // The handler for when the dispatcher finishes
+        const finishHandler = () => {
+          dispatcher.off("finish", finishHandler);
+          if (connection) {
+            connection.off("error", errorHandler);
+          }
+          resolve();
+        };
+        // The handler for connection errors
+        const errorHandler = (e: Error) => {
+          console.log(e);
+          if (voiceChannel) {
+            voiceChannel.leave();
+          }
+          dispatcher.off("finish", finishHandler);
+          if (connection) {
+            connection.off("error", errorHandler);
+          }
+          connection = undefined;
+          resolve();
+        };
+        // On sound finish
         dispatcher.on("finish", () => {
           resolve();
         });
+        if (connection) {
+          connection.on("error", (e: Error) => {
+            console.log(e);
+            if (voiceChannel) {
+              voiceChannel.leave();
+            }
+            connection = undefined;
+            resolve();
+          });
+        }
       });
       guildQueue.shift();
     }
