@@ -55,7 +55,7 @@ export async function enqueueSound(voiceChannel: VoiceChannel, soundFileName: st
       soundFileName
     });
   }
-  if (guildQueue.length === 1) {
+  if (guildQueue.length < 2) {
     playSound(voiceChannel.guild.id);
   }
 }
