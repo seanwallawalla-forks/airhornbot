@@ -132,6 +132,15 @@
       "paths": [
         "duck_quack.opus"
       ]
+    },
+    "villager": {
+      "name": "Minecraft Villager",
+      "paths": [
+        "villager_accept.ogg",
+        "villager_deny.ogg",
+        "villager_idle.ogg",
+        "villager_trade.ogg"
+      ]
     }
   }
 }
