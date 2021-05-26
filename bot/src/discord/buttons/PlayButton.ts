@@ -1,21 +1,24 @@
-import {DiscordCommand} from "../DiscordCommand";
-import {Client} from "discord.js-light";
 import {config} from "../../utils/Configuration";
 import {
-  CommandInteraction,
+  ComponentInteraction,
   DiscordCommandResponder,
-  InteractionCommandOption
+  InteractionComponentCustomIdData,
+  InteractionDataComponent
 } from "../DiscordInteraction";
+import {DiscordButton} from "../DiscordButton";
+import {Client} from "discord.js-light";
 import {enqueueSound, getSound} from "../../utils/AirhornAudio";
 import {trackPlay} from "../../utils/StatsTracker";
 
-export class AirhornCommand extends DiscordCommand {
+export class PlayButton extends DiscordButton {
 
-  constructor(name: string) {
-    super(name);
+  constructor() {
+    super("play");
   }
 
-  async executeInteraction(client: Client, interaction: CommandInteraction, discordCommandResponder: DiscordCommandResponder): Promise<void> {
+  async executeInteraction(client: Client, interaction: ComponentInteraction, discordCommandResponder: DiscordCommandResponder): Promise<void> {
+    const buttonInteractionData = (interaction.data as InteractionDataComponent);
+    const buttonCustomIdData = JSON.parse(buttonInteractionData.custom_id) as InteractionComponentCustomIdData;
     // Make sure they are in a guild
     if (!interaction.member || !interaction.guild_id) {
       return discordCommandResponder.sendBackMessage("You can't trigger the bot in a direct message.", false);
@@ -35,13 +38,14 @@ export class AirhornCommand extends DiscordCommand {
       return discordCommandResponder.sendBackMessage("The bot was not found in the guild.", false);
     }
     // Run the command
-    let soundVariant: string | undefined;
-    if (interaction.data.options) {
-      interaction.data.options.forEach((option: InteractionCommandOption) => {
-        if (option.name === "variant") {
-          soundVariant = String(option.value).toLowerCase();
-        }
-      });
+    let soundName = "";
+    if (buttonCustomIdData.soundName) {
+      soundName = String(buttonCustomIdData.soundName);
+    }
+    soundName = soundName.toLowerCase();
+    let soundVariant = undefined;
+    if (buttonCustomIdData.soundVariant) {
+      soundVariant = String(buttonCustomIdData.soundVariant).toLowerCase();
     }
     const voiceChannel = guildMember.voice.channel;
     if (!voiceChannel) {
@@ -61,34 +65,12 @@ export class AirhornCommand extends DiscordCommand {
     if (!botGuildMember.permissionsIn(fetchedVoiceChannel).has("CONNECT")) {
       return discordCommandResponder.sendBackMessage("The bot could not connect to the voice channel.", false);
     }
-    const sound = getSound(this.name, soundVariant);
+    const sound = getSound(soundName, soundVariant);
     if (!sound) {
       return discordCommandResponder.sendBackMessage("The sound specified was not found.", false);
     }
     // Don't await this, play the sound ASAP
-
-    discordCommandResponder.sendBackMessage("Dispatching sound...", true, [
-      {
-        type: 1,
-        components: [
-          {
-            type: 2,
-            style: 2,
-            label: "Replay",
-            custom_id: JSON.stringify({
-              name: "play",
-              soundName: sound.sound,
-              soundVariant: sound.variant
-            }),
-            emoji: config.sounds[this.name].emoji ? {
-              id: String(config.sounds[this.name].emoji)
-            } : {
-              id: String(config.discord.emojis.airhorn)
-            }
-          }
-        ]
-      }
-    ]);
+    discordCommandResponder.sendBackDeferredUpdateMessage();
     trackPlay(guild.id, voiceChannel.id, guildMember.id, sound.sound);
     // Dispatch the sound
     enqueueSound(voiceChannel, sound.variantFile);
